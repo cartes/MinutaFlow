@@ -1,0 +1,191 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; background: #f6f6f4; color: #1d201d; -webkit-font-smoothing: antialiased; }
+    a { color: #2f7a52; } a:hover { color: #276745; }
+    table { border-collapse: collapse; width: 100%; }
+    th { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: #8a8e87; font-weight: 600; text-align: left; padding: 8px 12px; border-bottom: 1px solid #e5e5e1; }
+    td { font-size: 13px; padding: 10px 12px; border-bottom: 1px solid #efefec; vertical-align: middle; }
+    .num { font-variant-numeric: tabular-nums; }
+    .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 600; padding: 2px 9px; border-radius: 99px; white-space: nowrap; }
+  </style>
+</helmet>
+<div style="width:1440px;height:900px;display:flex;background:#f6f6f4;overflow:hidden;box-sizing:border-box">
+
+  <div style="width:216px;flex-shrink:0;background:#ffffff;border-right:1px solid #e5e5e1;display:flex;flex-direction:column;padding:16px 12px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:9px;padding:2px 6px 14px 6px;border-bottom:1px solid #efefec">
+      <div style="width:26px;height:26px;border-radius:7px;background:#2f7a52;color:#ffffff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">M</div>
+      <div>
+        <div style="font-size:13.5px;font-weight:700;line-height:1.1">MinutaFlow</div>
+        <div style="font-size:11px;color:#8a8e87">Alimenta Catering</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px;padding-top:12px">
+      <div style="display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:6px;font-size:13px;font-weight:600;background:#e9f2ec;color:#22593c"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="2.5" width="4.6" height="4.6" rx="1"></rect><rect x="8.9" y="2.5" width="4.6" height="4.6" rx="1"></rect><rect x="2.5" y="8.9" width="4.6" height="4.6" rx="1"></rect><rect x="8.9" y="8.9" width="4.6" height="4.6" rx="1"></rect></svg>Dashboard</div>
+      <div style="display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:6px;font-size:13px;color:#565a54"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="3.5" width="11" height="10" rx="1.5"></rect><path d="M2.5 6.5h11M5.5 2v2.5M10.5 2v2.5"></path></svg>Menús</div>
+      <div style="display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:6px;font-size:13px;color:#565a54"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5.5"></circle><circle cx="8" cy="8" r="2.3"></circle></svg>Platos</div>
+      <div style="display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:6px;font-size:13px;color:#565a54"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3.5" y="2.5" width="9" height="11" rx="1.5"></rect><path d="M6 6.5h4M6 9h4M6 11.5h2.5"></path></svg>Pedidos</div>
+      <div style="display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:6px;font-size:13px;color:#565a54"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.5 5.5 8 2.5l5.5 3v5L8 13.5l-5.5-3v-5Z"></path><path d="M2.5 5.5 8 8.5l5.5-3M8 8.5v5"></path></svg>Packing list</div>
+      <div style="display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:6px;font-size:13px;color:#565a54"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="2.5" width="4" height="4"></rect><rect x="9.5" y="2.5" width="4" height="4"></rect><rect x="2.5" y="9.5" width="4" height="4"></rect><path d="M9.5 9.5h2.2v2.2h-2.2zM13.5 13.5h-1.8"></path></svg>Entregas QR</div>
+      <div style="display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:6px;font-size:13px;color:#565a54"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="2.5" width="8" height="11" rx="1"></rect><path d="M6.5 5.5h1.2M8.8 5.5H10M6.5 8h1.2M8.8 8H10M7 13.5v-2.2h2v2.2"></path></svg>Empresas</div>
+      <div style="display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:6px;font-size:13px;color:#565a54"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.5 13V8.5M8 13V3.5M12.5 13V6.5M2 13h12"></path></svg>Reportes</div>
+    </div>
+    <div style="margin-top:auto;display:flex;align-items:center;gap:9px;padding:10px 6px 2px 6px;border-top:1px solid #efefec">
+      <div style="width:26px;height:26px;border-radius:99px;background:#e9f2ec;color:#2f7a52;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">CR</div>
+      <div>
+        <div style="font-size:12.5px;font-weight:600">Carolina Reyes</div>
+        <div style="font-size:11px;color:#8a8e87">Admin catering</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="flex:1;display:flex;flex-direction:column;padding:24px 28px;box-sizing:border-box;overflow:hidden;gap:18px">
+
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-size:20px;font-weight:700">Dashboard</div>
+        <div style="font-size:13px;color:#70746e;margin-top:2px">Lunes 18 de agosto de 2026 · Servicio de almuerzo</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="display:flex;align-items:center;gap:7px;background:#ffffff;border:1px solid #e5e5e1;border-radius:7px;padding:6px 12px;width:200px;color:#8a8e87;font-size:13px"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="4"></circle><path d="M10 10l3.5 3.5"></path></svg>Buscar…</div>
+        <div style="display:flex;align-items:center;gap:6px;background:#2f7a52;color:#ffffff;border-radius:7px;padding:7px 14px;font-size:13px;font-weight:600"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v10M3 8h10"></path></svg>Crear menú</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:14px">
+      <div style="flex:1;background:#ffffff;border:1px solid #e5e5e1;border-radius:10px;padding:14px 16px">
+        <div style="font-size:11.5px;font-weight:600;color:#8a8e87;text-transform:uppercase;letter-spacing:.05em">Pedidos hoy</div>
+        <div class="num" style="font-size:26px;font-weight:700;margin-top:6px">250</div>
+        <div style="font-size:12px;color:#2f7a52;margin-top:2px">+12 vs. lunes pasado</div>
+      </div>
+      <div style="flex:1;background:#ffffff;border:1px solid #e5e5e1;border-radius:10px;padding:14px 16px">
+        <div style="font-size:11.5px;font-weight:600;color:#8a8e87;text-transform:uppercase;letter-spacing:.05em">Entregados</div>
+        <div class="num" style="font-size:26px;font-weight:700;margin-top:6px">128</div>
+        <div style="font-size:12px;color:#70746e;margin-top:2px">51% del total confirmado</div>
+      </div>
+      <div style="flex:1;background:#ffffff;border:1px solid #e5e5e1;border-radius:10px;padding:14px 16px">
+        <div style="font-size:11.5px;font-weight:600;color:#8a8e87;text-transform:uppercase;letter-spacing:.05em">Por entregar</div>
+        <div class="num" style="font-size:26px;font-weight:700;margin-top:6px">113</div>
+        <div style="font-size:12px;color:#70746e;margin-top:2px">En 4 sucursales</div>
+      </div>
+      <div style="flex:1;background:#ffffff;border:1px solid #e5e5e1;border-radius:10px;padding:14px 16px">
+        <div style="font-size:11.5px;font-weight:600;color:#8a8e87;text-transform:uppercase;letter-spacing:.05em">Cancelados</div>
+        <div class="num" style="font-size:26px;font-weight:700;margin-top:6px">9</div>
+        <div style="font-size:12px;color:#a86a1c;margin-top:2px">3 fuera de plazo</div>
+      </div>
+      <div style="flex:1;background:#ffffff;border:1px solid #e5e5e1;border-radius:10px;padding:14px 16px">
+        <div style="font-size:11.5px;font-weight:600;color:#8a8e87;text-transform:uppercase;letter-spacing:.05em">Cupos restantes</div>
+        <div class="num" style="font-size:26px;font-weight:700;margin-top:6px">46</div>
+        <div style="font-size:12px;color:#70746e;margin-top:2px">De 350 planificados</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:14px;flex:1;min-height:0">
+
+      <div style="flex:1.7;display:flex;flex-direction:column;gap:14px;min-width:0">
+        <div style="background:#ffffff;border:1px solid #e5e5e1;border-radius:10px;overflow:hidden">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid #efefec">
+            <div style="font-size:14px;font-weight:700">Menús de hoy</div>
+            <a href="#" style="font-size:12.5px;font-weight:600;text-decoration:none">Ver todos</a>
+          </div>
+          <table>
+            <thead><tr><th>Menú</th><th>Alcance</th><th>Opciones</th><th>Pedidos / cupo</th><th>Corte</th><th>Estado</th></tr></thead>
+            <tbody>
+              <tr>
+                <td style="font-weight:600">Menú Ejecutivo</td>
+                <td style="color:#70746e">General · todos los clientes</td>
+                <td class="num">4</td>
+                <td class="num">214 / 290</td>
+                <td class="num">10:00</td>
+                <td><span class="badge" style="background:#e9f2ec;color:#22593c">Publicado</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight:600">Menú TechNova</td>
+                <td style="color:#70746e">TechNova · exclusivo</td>
+                <td class="num">2</td>
+                <td class="num">36 / 60</td>
+                <td class="num">09:30</td>
+                <td><span class="badge" style="background:#e9f2ec;color:#22593c">Publicado</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="background:#ffffff;border:1px solid #e5e5e1;border-radius:10px;padding:14px 16px;flex:1">
+          <div style="font-size:14px;font-weight:700;margin-bottom:12px">Cupos por opción · Menú Ejecutivo</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">Opción A · Cazuela de vacuno</span><span class="num" style="color:#70746e">98 / 120</span></div>
+              <div style="height:6px;background:#efefec;border-radius:99px"><div style="width:82%;height:6px;background:#2f7a52;border-radius:99px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">Opción B · Pastel de choclo</span><span class="num" style="color:#70746e">74 / 100</span></div>
+              <div style="height:6px;background:#efefec;border-radius:99px"><div style="width:74%;height:6px;background:#2f7a52;border-radius:99px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">Opción Vegana · Lasaña de verduras</span><span class="num" style="color:#70746e">23 / 40</span></div>
+              <div style="height:6px;background:#efefec;border-radius:99px"><div style="width:58%;height:6px;background:#2f7a52;border-radius:99px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">Hipocalórico · Salmón grillé con quínoa</span><span class="num" style="color:#a86a1c">28 / 30 · quedan 2</span></div>
+              <div style="height:6px;background:#efefec;border-radius:99px"><div style="width:93%;height:6px;background:#c9862a;border-radius:99px"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="flex:1;background:#ffffff;border:1px solid #e5e5e1;border-radius:10px;display:flex;flex-direction:column;min-width:0;overflow:hidden">
+        <div style="padding:13px 16px;border-bottom:1px solid #efefec;font-size:14px;font-weight:700">Actividad reciente</div>
+        <div style="display:flex;flex-direction:column;padding:6px 0">
+          <div style="display:flex;gap:10px;padding:9px 16px;align-items:flex-start">
+            <div style="width:8px;height:8px;border-radius:99px;background:#2f7a52;margin-top:5px;flex-shrink:0"></div>
+            <div style="flex:1"><div style="font-size:12.5px"><span style="font-weight:600">Camila Fuentes</span> retiró Opción B en Planta Til Til</div><div class="num" style="font-size:11px;color:#8a8e87;margin-top:1px">12:42</div></div>
+          </div>
+          <div style="display:flex;gap:10px;padding:9px 16px;align-items:flex-start">
+            <div style="width:8px;height:8px;border-radius:99px;background:#2f7a52;margin-top:5px;flex-shrink:0"></div>
+            <div style="flex:1"><div style="font-size:12.5px"><span style="font-weight:600">Jorge Salinas</span> retiró Opción A en Oficina Providencia</div><div class="num" style="font-size:11px;color:#8a8e87;margin-top:1px">12:39</div></div>
+          </div>
+          <div style="display:flex;gap:10px;padding:9px 16px;align-items:flex-start">
+            <div style="width:8px;height:8px;border-radius:99px;background:#b23f38;margin-top:5px;flex-shrink:0"></div>
+            <div style="flex:1"><div style="font-size:12.5px"><span style="font-weight:600">Valentina Rojas</span> canceló su pedido de mañana</div><div class="num" style="font-size:11px;color:#8a8e87;margin-top:1px">12:31 · "Reunión fuera de la oficina"</div></div>
+          </div>
+          <div style="display:flex;gap:10px;padding:9px 16px;align-items:flex-start">
+            <div style="width:8px;height:8px;border-radius:99px;background:#3563a8;margin-top:5px;flex-shrink:0"></div>
+            <div style="flex:1"><div style="font-size:12.5px"><span style="font-weight:600">42 pedidos nuevos</span> para el Menú Ejecutivo de mañana</div><div class="num" style="font-size:11px;color:#8a8e87;margin-top:1px">12:15</div></div>
+          </div>
+          <div style="display:flex;gap:10px;padding:9px 16px;align-items:flex-start">
+            <div style="width:8px;height:8px;border-radius:99px;background:#c9862a;margin-top:5px;flex-shrink:0"></div>
+            <div style="flex:1"><div style="font-size:12.5px"><span style="font-weight:600">Hipocalórico</span> quedó con 2 cupos disponibles</div><div class="num" style="font-size:11px;color:#8a8e87;margin-top:1px">11:58</div></div>
+          </div>
+          <div style="display:flex;gap:10px;padding:9px 16px;align-items:flex-start">
+            <div style="width:8px;height:8px;border-radius:99px;background:#2f7a52;margin-top:5px;flex-shrink:0"></div>
+            <div style="flex:1"><div style="font-size:12.5px"><span style="font-weight:600">Menú TechNova</span> publicado para el martes 19</div><div class="num" style="font-size:11px;color:#8a8e87;margin-top:1px">11:40 · Carolina Reyes</div></div>
+          </div>
+        </div>
+        <div style="margin-top:auto;padding:12px 16px;border-top:1px solid #efefec">
+          <div style="font-size:11.5px;font-weight:600;color:#8a8e87;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Próximos cortes</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;justify-content:space-between;font-size:12.5px"><span>Menú TechNova · mar 19</span><span class="num" style="font-weight:600;color:#8a8e87">Cerrado 09:30</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12.5px"><span>Menú Ejecutivo · mar 19</span><span class="num" style="font-weight:600;color:#a86a1c">Mañana 10:00</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

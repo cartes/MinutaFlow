@@ -1,0 +1,196 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; background: #f6f6f4; color: #1d201d; -webkit-font-smoothing: antialiased; }
+    a { color: #2f7a52; } a:hover { color: #276745; }
+    table { border-collapse: collapse; width: 100%; }
+    th { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: #8a8e87; font-weight: 600; text-align: left; padding: 8px 12px; border-bottom: 1px solid #e5e5e1; }
+    td { font-size: 13px; padding: 10px 12px; border-bottom: 1px solid #efefec; vertical-align: middle; }
+    .num { font-variant-numeric: tabular-nums; }
+    .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 600; padding: 2px 9px; border-radius: 99px; white-space: nowrap; }
+    .tag { display: inline-flex; font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 5px; background: #f0f0ed; color: #565a54; }
+  </style>
+</helmet>
+<div style="width:1440px;height:900px;display:flex;background:#f6f6f4;overflow:hidden;box-sizing:border-box">
+
+  <div style="width:216px;flex-shrink:0;background:#ffffff;border-right:1px solid #e5e5e1;display:flex;flex-direction:column;padding:16px 12px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:9px;padding:2px 6px 14px 6px;border-bottom:1px solid #efefec">
+      <div style="width:26px;height:26px;border-radius:7px;background:#2f7a52;color:#ffffff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">M</div>
+      <div>
+        <div style="font-size:13.5px;font-weight:700;line-height:1.1">MinutaFlow</div>
+        <div style="font-size:11px;color:#8a8e87">Alimenta Catering</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px;padding-top:12px">
+      <div style="display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:6px;font-size:13px;color:#565a54"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="2.5" width="4.6" height="4.6" rx="1"></rect><rect x="8.9" y="2.5" width="4.6" height="4.6" rx="1"></rect><rect x="2.5" y="8.9" width="4.6" height="4.6" rx="1"></rect><rect x="8.9" y="8.9" width="4.6" height="4.6" rx="1"></rect></svg>Dashboard</div>
+      <div style="display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:6px;font-size:13px;font-weight:600;background:#e9f2ec;color:#22593c"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="3.5" width="11" height="10" rx="1.5"></rect><path d="M2.5 6.5h11M5.5 2v2.5M10.5 2v2.5"></path></svg>Menús</div>
+      <div style="display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:6px;font-size:13px;color:#565a54"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5.5"></circle><circle cx="8" cy="8" r="2.3"></circle></svg>Platos</div>
+      <div style="display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:6px;font-size:13px;color:#565a54"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3.5" y="2.5" width="9" height="11" rx="1.5"></rect><path d="M6 6.5h4M6 9h4M6 11.5h2.5"></path></svg>Pedidos</div>
+      <div style="display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:6px;font-size:13px;color:#565a54"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.5 5.5 8 2.5l5.5 3v5L8 13.5l-5.5-3v-5Z"></path><path d="M2.5 5.5 8 8.5l5.5-3M8 8.5v5"></path></svg>Packing list</div>
+      <div style="display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:6px;font-size:13px;color:#565a54"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="2.5" width="4" height="4"></rect><rect x="9.5" y="2.5" width="4" height="4"></rect><rect x="2.5" y="9.5" width="4" height="4"></rect><path d="M9.5 9.5h2.2v2.2h-2.2zM13.5 13.5h-1.8"></path></svg>Entregas QR</div>
+      <div style="display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:6px;font-size:13px;color:#565a54"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="2.5" width="8" height="11" rx="1"></rect><path d="M6.5 5.5h1.2M8.8 5.5H10M6.5 8h1.2M8.8 8H10M7 13.5v-2.2h2v2.2"></path></svg>Empresas</div>
+      <div style="display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:6px;font-size:13px;color:#565a54"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.5 13V8.5M8 13V3.5M12.5 13V6.5M2 13h12"></path></svg>Reportes</div>
+    </div>
+    <div style="margin-top:auto;display:flex;align-items:center;gap:9px;padding:10px 6px 2px 6px;border-top:1px solid #efefec">
+      <div style="width:26px;height:26px;border-radius:99px;background:#e9f2ec;color:#2f7a52;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">CR</div>
+      <div>
+        <div style="font-size:12.5px;font-weight:600">Carolina Reyes</div>
+        <div style="font-size:11px;color:#8a8e87">Admin catering</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="flex:1;display:flex;flex-direction:column;padding:24px 28px;box-sizing:border-box;overflow:hidden;gap:16px">
+
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-size:20px;font-weight:700">Menús</div>
+        <div style="font-size:13px;color:#70746e;margin-top:2px">Planificación semanal del servicio</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="display:flex;align-items:center;background:#ffffff;border:1px solid #e5e5e1;border-radius:7px;overflow:hidden">
+          <div style="padding:6px 10px;color:#565a54;border-right:1px solid #efefec;font-size:13px">‹</div>
+          <div class="num" style="padding:6px 14px;font-size:13px;font-weight:600">Semana 18 – 22 ago</div>
+          <div style="padding:6px 10px;color:#565a54;border-left:1px solid #efefec;font-size:13px">›</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;background:#2f7a52;color:#ffffff;border-radius:7px;padding:7px 14px;font-size:13px;font-weight:600"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v10M3 8h10"></path></svg>Crear menú</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:14px;flex:1;min-height:0">
+
+      <div style="width:380px;flex-shrink:0;display:flex;flex-direction:column;gap:8px;overflow:hidden">
+        <div style="background:#ffffff;border:1px solid #2f7a52;border-radius:10px;padding:12px 14px;box-shadow:0 1px 2px rgba(29,32,29,0.04)">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-size:11.5px;font-weight:700;color:#22593c;text-transform:uppercase;letter-spacing:.05em">Lun 18</div>
+            <span class="badge" style="background:#e9f2ec;color:#22593c">Publicado</span>
+          </div>
+          <div style="font-size:13.5px;font-weight:700;margin-top:6px">Menú Ejecutivo</div>
+          <div class="num" style="font-size:12px;color:#70746e;margin-top:2px">General · 4 opciones · 214 pedidos</div>
+        </div>
+        <div style="background:#ffffff;border:1px solid #e5e5e1;border-radius:10px;padding:12px 14px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-size:11.5px;font-weight:700;color:#8a8e87;text-transform:uppercase;letter-spacing:.05em">Mar 19</div>
+            <span class="badge" style="background:#e9f2ec;color:#22593c">Publicado</span>
+          </div>
+          <div style="font-size:13.5px;font-weight:700;margin-top:6px">Menú Ejecutivo</div>
+          <div class="num" style="font-size:12px;color:#70746e;margin-top:2px">General · 4 opciones · 96 pedidos</div>
+          <div style="border-top:1px solid #efefec;margin-top:10px;padding-top:10px">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-size:13.5px;font-weight:700">Menú TechNova</div>
+              <span class="badge" style="background:#e9f2ec;color:#22593c">Publicado</span>
+            </div>
+            <div class="num" style="font-size:12px;color:#70746e;margin-top:2px">TechNova · exclusivo · 2 opciones · 12 pedidos</div>
+          </div>
+        </div>
+        <div style="background:#ffffff;border:1px solid #e5e5e1;border-radius:10px;padding:12px 14px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-size:11.5px;font-weight:700;color:#8a8e87;text-transform:uppercase;letter-spacing:.05em">Mié 20</div>
+            <span class="badge" style="background:#f0f0ed;color:#565a54">Borrador</span>
+          </div>
+          <div style="font-size:13.5px;font-weight:700;margin-top:6px">Menú Ejecutivo</div>
+          <div class="num" style="font-size:12px;color:#70746e;margin-top:2px">General · 3 opciones · sin publicar</div>
+        </div>
+        <div style="background:#ffffff;border:1px dashed #d4d4cf;border-radius:10px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:11.5px;font-weight:700;color:#8a8e87;text-transform:uppercase;letter-spacing:.05em">Jue 21</div>
+            <div style="font-size:13px;color:#8a8e87;margin-top:6px">Sin menú planificado</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;border:1px solid #e5e5e1;color:#2f7a52;border-radius:7px;padding:5px 12px;font-size:12.5px;font-weight:600">Crear</div>
+        </div>
+        <div style="background:#ffffff;border:1px dashed #d4d4cf;border-radius:10px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:11.5px;font-weight:700;color:#8a8e87;text-transform:uppercase;letter-spacing:.05em">Vie 22</div>
+            <div style="font-size:13px;color:#8a8e87;margin-top:6px">Sin menú planificado</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;border:1px solid #e5e5e1;color:#2f7a52;border-radius:7px;padding:5px 12px;font-size:12.5px;font-weight:600">Crear</div>
+        </div>
+      </div>
+
+      <div style="flex:1;background:#ffffff;border:1px solid #e5e5e1;border-radius:10px;display:flex;flex-direction:column;min-width:0;overflow:hidden">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:16px;border-bottom:1px solid #efefec">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="font-size:16px;font-weight:700">Menú Ejecutivo</div>
+              <span class="badge" style="background:#e9f2ec;color:#22593c">Publicado</span>
+            </div>
+            <div class="num" style="font-size:12.5px;color:#70746e;margin-top:3px">Lunes 18 de agosto · General · Corte de pedidos 10:00 (mismo día)</div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <div style="border:1px solid #e5e5e1;color:#565a54;border-radius:7px;padding:6px 12px;font-size:12.5px;font-weight:600">Despublicar</div>
+            <div style="border:1px solid #e5e5e1;color:#565a54;border-radius:7px;padding:6px 12px;font-size:12.5px;font-weight:600">Editar</div>
+          </div>
+        </div>
+
+        <table>
+          <thead><tr><th style="width:130px">Opción</th><th>Plato</th><th>Tags</th><th>Cupo</th><th>Pedidos</th><th>Extra</th><th>Disponible</th></tr></thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:700">Opción A</td>
+              <td><div style="font-weight:600">Cazuela de vacuno</div><div style="font-size:11.5px;color:#8a8e87">Fondo · 620 kcal</div></td>
+              <td><span class="tag">tradicional</span></td>
+              <td class="num">120</td>
+              <td class="num" style="font-weight:600">98</td>
+              <td class="num" style="color:#70746e">—</td>
+              <td><div style="width:34px;height:19px;border-radius:99px;background:#2f7a52;display:flex;align-items:center;justify-content:flex-end;padding:2px;box-sizing:border-box"><div style="width:15px;height:15px;border-radius:99px;background:#ffffff"></div></div></td>
+            </tr>
+            <tr>
+              <td style="font-weight:700">Opción B</td>
+              <td><div style="font-weight:600">Pastel de choclo</div><div style="font-size:11.5px;color:#8a8e87">Fondo · 710 kcal</div></td>
+              <td><span class="tag">tradicional</span> <span class="tag" style="background:#f9ecea;color:#8f3730">lactosa</span></td>
+              <td class="num">100</td>
+              <td class="num" style="font-weight:600">74</td>
+              <td class="num" style="color:#70746e">—</td>
+              <td><div style="width:34px;height:19px;border-radius:99px;background:#2f7a52;display:flex;align-items:center;justify-content:flex-end;padding:2px;box-sizing:border-box"><div style="width:15px;height:15px;border-radius:99px;background:#ffffff"></div></div></td>
+            </tr>
+            <tr>
+              <td style="font-weight:700">Opción Vegana</td>
+              <td><div style="font-weight:600">Lasaña de verduras</div><div style="font-size:11.5px;color:#8a8e87">Fondo · 540 kcal</div></td>
+              <td><span class="tag" style="background:#e9f2ec;color:#22593c">vegano</span> <span class="tag" style="background:#f9ecea;color:#8f3730">gluten</span></td>
+              <td class="num">40</td>
+              <td class="num" style="font-weight:600">23</td>
+              <td class="num" style="color:#70746e">—</td>
+              <td><div style="width:34px;height:19px;border-radius:99px;background:#2f7a52;display:flex;align-items:center;justify-content:flex-end;padding:2px;box-sizing:border-box"><div style="width:15px;height:15px;border-radius:99px;background:#ffffff"></div></div></td>
+            </tr>
+            <tr>
+              <td style="font-weight:700">Hipocalórico</td>
+              <td><div style="font-weight:600">Salmón grillé con quínoa</div><div style="font-size:11.5px;color:#8a8e87">Hipocalórico · 430 kcal</div></td>
+              <td><span class="tag" style="background:#e9f2ec;color:#22593c">alto en proteína</span> <span class="tag" style="background:#f9ecea;color:#8f3730">pescado</span></td>
+              <td class="num" style="color:#a86a1c;font-weight:600">30 · quedan 2</td>
+              <td class="num" style="font-weight:600">28</td>
+              <td class="num">$1.200</td>
+              <td><div style="width:34px;height:19px;border-radius:99px;background:#2f7a52;display:flex;align-items:center;justify-content:flex-end;padding:2px;box-sizing:border-box"><div style="width:15px;height:15px;border-radius:99px;background:#ffffff"></div></div></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="padding:12px 16px">
+          <div style="display:inline-flex;align-items:center;gap:6px;border:1px dashed #d4d4cf;color:#2f7a52;border-radius:7px;padding:7px 14px;font-size:12.5px;font-weight:600"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v10M3 8h10"></path></svg>Agregar opción</div>
+        </div>
+
+        <div style="margin-top:auto;display:flex;gap:24px;padding:13px 16px;border-top:1px solid #efefec;background:#fbfbfa">
+          <div><div style="font-size:11px;font-weight:600;color:#8a8e87;text-transform:uppercase;letter-spacing:.05em">Total pedidos</div><div class="num" style="font-size:16px;font-weight:700;margin-top:1px">223</div></div>
+          <div><div style="font-size:11px;font-weight:600;color:#8a8e87;text-transform:uppercase;letter-spacing:.05em">Cupo total</div><div class="num" style="font-size:16px;font-weight:700;margin-top:1px">290</div></div>
+          <div><div style="font-size:11px;font-weight:600;color:#8a8e87;text-transform:uppercase;letter-spacing:.05em">Ocupación</div><div class="num" style="font-size:16px;font-weight:700;margin-top:1px">77%</div></div>
+          <div><div style="font-size:11px;font-weight:600;color:#8a8e87;text-transform:uppercase;letter-spacing:.05em">Copagos del día</div><div class="num" style="font-size:16px;font-weight:700;margin-top:1px">$33.600</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
