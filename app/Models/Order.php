@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\OrderStatus;
+use App\Models\Concerns\BelongsToTenant;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -40,7 +41,7 @@ use Illuminate\Support\Str;
  */
 class Order extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes;
+    use BelongsToTenant, HasFactory, HasUuids, SoftDeletes;
 
     /**
      * Atributos asignables en masa.

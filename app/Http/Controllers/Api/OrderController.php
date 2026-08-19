@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Order\CancelOrderRequest;
+use App\Http\Requests\Order\StoreOrderRequest;
 use App\Models\Company;
 use App\Models\Menu;
 use App\Models\MenuItem;
@@ -12,7 +14,6 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
 
 class OrderController extends Controller
 {
@@ -26,10 +27,11 @@ class OrderController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Order::class);
+
         $user = $request->user();
 
         $query = Order::query()
-            ->where('tenant_id', $user->tenant_id)
             ->with(['menuItem.dish', 'menu:id,title,menu_date', 'branch:id,name'])
             ->when($request->filled('date'), fn ($q) => $q->forDate($request->string('date')))
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->string('status')))
@@ -59,8 +61,10 @@ class OrderController extends Controller
      *
      * POST /api/v1/orders
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreOrderRequest $request): JsonResponse
     {
+        $this->authorize('create', Order::class);
+
         $user = $request->user();
 
         abort_unless(
@@ -69,18 +73,13 @@ class OrderController extends Controller
             'Tu cuenta no tiene empresa o sucursal asignada. Contacta a tu administrador.'
         );
 
-        $data = $request->validate([
-            'menu_item_id' => ['required', Rule::exists('menu_items', 'id')],
-            'notes' => ['nullable', 'string', 'max:500'],
-            'accept_allergen_risk' => ['boolean'], // Confirmación explícita si el plato contiene sus alérgenos
-        ]);
+        $data = $request->validated();
 
         /** @var MenuItem $item */
         $item = MenuItem::with(['menu', 'dish'])->findOrFail($data['menu_item_id']);
         $menu = $item->menu;
 
-        // Alcance del menú: mismo tenant, publicado, y general o exclusivo de la empresa del comensal
-        abort_unless($menu->tenant_id === $user->tenant_id, 404);
+        abort_unless($menu !== null, 404);
         abort_unless($menu->is_published, 422, 'Este menú aún no está disponible para pedidos.');
         abort_unless(
             $menu->company_id === null || $menu->company_id === $user->company_id,
@@ -148,7 +147,6 @@ class OrderController extends Controller
 
             return Order::create([
                 ...$attributes,
-                'tenant_id' => $user->tenant_id,
                 'company_id' => $user->company_id,
                 'user_id' => $user->id,
                 'order_date' => $menu->menu_date,
@@ -163,18 +161,9 @@ class OrderController extends Controller
      *
      * GET /api/v1/orders/{order}
      */
-    public function show(Request $request, Order $order): JsonResponse
+    public function show(Order $order): JsonResponse
     {
-        $user = $request->user();
-        abort_unless($order->tenant_id === $user->tenant_id, 404);
-
-        // Solo el dueño del pedido, RRHH de su empresa, o el staff del catering pueden verlo
-        $canView = $order->user_id === $user->id
-            || ($user->isCompanyAdmin() && $order->company_id === $user->company_id)
-            || $user->isTenantAdmin()
-            || $user->isKitchenOperator();
-
-        abort_unless($canView, 403, 'No tienes permisos para ver este pedido.');
+        $this->authorize('view', $order);
 
         return response()->json(
             $order->load(['menuItem.dish', 'menu:id,title,menu_date', 'branch:id,name', 'user:id,name,email'])
@@ -188,14 +177,13 @@ class OrderController extends Controller
      *
      * POST /api/v1/orders/{order}/cancel
      */
-    public function cancel(Request $request, Order $order): JsonResponse
+    public function cancel(CancelOrderRequest $request, Order $order): JsonResponse
     {
-        $user = $request->user();
-        abort_unless($order->tenant_id === $user->tenant_id, 404);
+        $this->authorize('cancel', $order);
 
-        $data = $request->validate([
-            'reason' => ['nullable', 'string', 'max:255'],
-        ]);
+        $user = $request->user();
+
+        $data = $request->validated();
 
         if ($order->status !== OrderStatus::Confirmed) {
             return response()->json([
@@ -211,8 +199,6 @@ class OrderController extends Controller
                     'message' => "El plazo para cancelar venció el {$deadline->format('d-m-Y H:i')}.",
                 ], 422);
             }
-        } else {
-            abort_unless($user->isTenantAdmin(), 403, 'No tienes permisos para cancelar este pedido.');
         }
 
         $order->cancel($data['reason'] ?? null);
@@ -221,9 +207,7 @@ class OrderController extends Controller
     }
 
     /**
-     * Calcula la fecha/hora límite para pedir o cancelar un menú de una fecha dada,
-     * según la configuración de corte de la empresa cliente.
-     * Ej: cutoff_days_in_advance=1 y cutoff_time="17:00" => hasta las 17:00 del día anterior.
+     * Calcula la fecha/hora límite para pedir o cancelar un menú de una fecha dada.
      */
     private function orderingDeadline(Company $company, Carbon|string $menuDate): Carbon
     {

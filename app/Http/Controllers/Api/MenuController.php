@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Menu\StoreMenuRequest;
+use App\Http\Requests\Menu\UpdateMenuRequest;
 use App\Models\Menu;
 use App\Models\MenuItem;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
 
 class MenuController extends Controller
 {
@@ -22,10 +23,11 @@ class MenuController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Menu::class);
+
         $user = $request->user();
 
         $query = Menu::query()
-            ->where('tenant_id', $user->tenant_id)
             ->with(['items.dish', 'company:id,name'])
             ->when($request->filled('from'), fn ($q) => $q->whereDate('menu_date', '>=', $request->date('from')))
             ->when($request->filled('to'), fn ($q) => $q->whereDate('menu_date', '<=', $request->date('to')))
@@ -49,42 +51,14 @@ class MenuController extends Controller
      *
      * POST /api/v1/menus
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreMenuRequest $request): JsonResponse
     {
-        $user = $request->user();
-        abort_unless($user->isTenantAdmin(), 403, 'Solo el administrador del catering puede crear menús.');
+        $this->authorize('create', Menu::class);
 
-        $data = $request->validate([
-            'company_id' => [
-                'nullable',
-                Rule::exists('companies', 'id')->where('tenant_id', $user->tenant_id),
-            ],
-            'title' => ['nullable', 'string', 'max:255'],
-            'menu_date' => [
-                'required',
-                'date',
-                // Evita duplicar el menú del mismo día para el mismo alcance (general o por empresa)
-                Rule::unique('menus', 'menu_date')
-                    ->where('tenant_id', $user->tenant_id)
-                    ->where('company_id', $request->input('company_id'))
-                    ->whereNull('deleted_at'),
-            ],
-            'is_published' => ['boolean'],
-            'items' => ['nullable', 'array'],
-            'items.*.dish_id' => [
-                'required',
-                Rule::exists('dishes', 'id')->where('tenant_id', $user->tenant_id)->whereNull('deleted_at'),
-            ],
-            'items.*.option_label' => ['required', 'string', 'max:30'],
-            'items.*.max_quota' => ['nullable', 'integer', 'min:1'],
-            'items.*.price_extra_clp' => ['nullable', 'integer', 'min:0'],
-            'items.*.is_available' => ['boolean'],
-            'items.*.sort_order' => ['nullable', 'integer', 'min:0'],
-        ]);
+        $data = $request->validated();
 
-        $menu = DB::transaction(function () use ($data, $user) {
+        $menu = DB::transaction(function () use ($data) {
             $menu = Menu::create([
-                'tenant_id' => $user->tenant_id,
                 'company_id' => $data['company_id'] ?? null,
                 'title' => $data['title'] ?? null,
                 'menu_date' => $data['menu_date'],
@@ -108,8 +82,9 @@ class MenuController extends Controller
      */
     public function show(Request $request, Menu $menu): JsonResponse
     {
+        $this->authorize('view', $menu);
+
         $user = $request->user();
-        abort_unless($menu->tenant_id === $user->tenant_id, 404);
 
         // Comensales y RRHH solo pueden ver menús publicados de su alcance
         if (!$user->isTenantAdmin() && !$user->isKitchenOperator()) {
@@ -134,23 +109,11 @@ class MenuController extends Controller
      *
      * PUT/PATCH /api/v1/menus/{menu}
      */
-    public function update(Request $request, Menu $menu): JsonResponse
+    public function update(UpdateMenuRequest $request, Menu $menu): JsonResponse
     {
-        $user = $request->user();
-        abort_unless($menu->tenant_id === $user->tenant_id, 404);
-        abort_unless($user->isTenantAdmin(), 403, 'Solo el administrador del catering puede editar menús.');
+        $this->authorize('update', $menu);
 
-        $data = $request->validate([
-            'company_id' => [
-                'nullable',
-                Rule::exists('companies', 'id')->where('tenant_id', $user->tenant_id),
-            ],
-            'title' => ['nullable', 'string', 'max:255'],
-            'menu_date' => ['sometimes', 'date'],
-            'is_published' => ['boolean'],
-        ]);
-
-        $menu->update($data);
+        $menu->update($request->validated());
 
         return response()->json($menu->load('items.dish'));
     }
@@ -160,11 +123,9 @@ class MenuController extends Controller
      *
      * DELETE /api/v1/menus/{menu}
      */
-    public function destroy(Request $request, Menu $menu): JsonResponse
+    public function destroy(Menu $menu): JsonResponse
     {
-        $user = $request->user();
-        abort_unless($menu->tenant_id === $user->tenant_id, 404);
-        abort_unless($user->isTenantAdmin(), 403, 'Solo el administrador del catering puede eliminar menús.');
+        $this->authorize('delete', $menu);
 
         if ($menu->orders()->whereIn('status', [OrderStatus::Confirmed, OrderStatus::Delivered])->exists()) {
             return response()->json([
@@ -182,11 +143,9 @@ class MenuController extends Controller
      *
      * POST /api/v1/menus/{menu}/publish
      */
-    public function publish(Request $request, Menu $menu): JsonResponse
+    public function publish(Menu $menu): JsonResponse
     {
-        $user = $request->user();
-        abort_unless($menu->tenant_id === $user->tenant_id, 404);
-        abort_unless($user->isTenantAdmin(), 403, 'Solo el administrador del catering puede publicar menús.');
+        $this->authorize('publish', $menu);
 
         if ($menu->items()->count() === 0) {
             return response()->json([
@@ -204,11 +163,9 @@ class MenuController extends Controller
      *
      * POST /api/v1/menus/{menu}/unpublish
      */
-    public function unpublish(Request $request, Menu $menu): JsonResponse
+    public function unpublish(Menu $menu): JsonResponse
     {
-        $user = $request->user();
-        abort_unless($menu->tenant_id === $user->tenant_id, 404);
-        abort_unless($user->isTenantAdmin(), 403, 'Solo el administrador del catering puede despublicar menús.');
+        $this->authorize('publish', $menu);
 
         $menu->update(['is_published' => false]);
 

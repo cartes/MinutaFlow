@@ -16,9 +16,9 @@ Route::prefix('v1')->group(function () {
     Route::post('auth/login', [AuthController::class, 'login']);
 
     /* -------------------------------------------------------------------------
-     * Rutas protegidas con token Sanctum
+     * Rutas protegidas con token Sanctum y contexto de Tenant
      * ---------------------------------------------------------------------- */
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware(['auth:sanctum', 'tenant.context'])->group(function () {
 
         // Sesión y perfil
         Route::post('auth/logout', [AuthController::class, 'logout']);

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Dish\StoreDishRequest;
+use App\Http\Requests\Dish\UpdateDishRequest;
 use App\Models\Dish;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,11 +18,9 @@ class DishController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $user = $request->user();
-        abort_unless($user->isTenantAdmin() || $user->isKitchenOperator(), 403, 'No tienes permisos para ver el catálogo de platos.');
+        $this->authorize('viewAny', Dish::class);
 
         $dishes = Dish::query()
-            ->where('tenant_id', $user->tenant_id)
             ->when($request->filled('category'), fn ($q) => $q->byCategory($request->string('category')))
             ->when($request->boolean('active'), fn ($q) => $q->active())
             ->when($request->filled('search'), fn ($q) => $q->where('name', 'like', '%' . $request->string('search') . '%'))
@@ -35,26 +35,11 @@ class DishController extends Controller
      *
      * POST /api/v1/dishes
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreDishRequest $request): JsonResponse
     {
-        $user = $request->user();
-        abort_unless($user->isTenantAdmin(), 403, 'Solo el administrador del catering puede crear platos.');
+        $this->authorize('create', Dish::class);
 
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'category' => ['nullable', 'string', 'max:100'],
-            'dietary_tags' => ['nullable', 'array'],
-            'dietary_tags.*' => ['string', 'max:50'],
-            'allergens' => ['nullable', 'array'],
-            'allergens.*' => ['string', 'max:50'],
-            'calories_kcal' => ['nullable', 'integer', 'min:0'],
-            'raw_cost_clp' => ['nullable', 'integer', 'min:0'],
-            'image_url' => ['nullable', 'url', 'max:2048'],
-            'is_active' => ['boolean'],
-        ]);
-
-        $dish = Dish::create([...$data, 'tenant_id' => $user->tenant_id]);
+        $dish = Dish::create($request->validated());
 
         return response()->json($dish, 201);
     }
@@ -64,11 +49,9 @@ class DishController extends Controller
      *
      * GET /api/v1/dishes/{dish}
      */
-    public function show(Request $request, Dish $dish): JsonResponse
+    public function show(Dish $dish): JsonResponse
     {
-        $user = $request->user();
-        abort_unless($dish->tenant_id === $user->tenant_id, 404);
-        abort_unless($user->isTenantAdmin() || $user->isKitchenOperator(), 403, 'No tienes permisos para ver este plato.');
+        $this->authorize('view', $dish);
 
         return response()->json($dish);
     }
@@ -78,27 +61,11 @@ class DishController extends Controller
      *
      * PUT/PATCH /api/v1/dishes/{dish}
      */
-    public function update(Request $request, Dish $dish): JsonResponse
+    public function update(UpdateDishRequest $request, Dish $dish): JsonResponse
     {
-        $user = $request->user();
-        abort_unless($dish->tenant_id === $user->tenant_id, 404);
-        abort_unless($user->isTenantAdmin(), 403, 'Solo el administrador del catering puede editar platos.');
+        $this->authorize('update', $dish);
 
-        $data = $request->validate([
-            'name' => ['sometimes', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'category' => ['nullable', 'string', 'max:100'],
-            'dietary_tags' => ['nullable', 'array'],
-            'dietary_tags.*' => ['string', 'max:50'],
-            'allergens' => ['nullable', 'array'],
-            'allergens.*' => ['string', 'max:50'],
-            'calories_kcal' => ['nullable', 'integer', 'min:0'],
-            'raw_cost_clp' => ['nullable', 'integer', 'min:0'],
-            'image_url' => ['nullable', 'url', 'max:2048'],
-            'is_active' => ['boolean'],
-        ]);
-
-        $dish->update($data);
+        $dish->update($request->validated());
 
         return response()->json($dish);
     }
@@ -109,11 +76,9 @@ class DishController extends Controller
      *
      * DELETE /api/v1/dishes/{dish}
      */
-    public function destroy(Request $request, Dish $dish): JsonResponse
+    public function destroy(Dish $dish): JsonResponse
     {
-        $user = $request->user();
-        abort_unless($dish->tenant_id === $user->tenant_id, 404);
-        abort_unless($user->isTenantAdmin(), 403, 'Solo el administrador del catering puede eliminar platos.');
+        $this->authorize('delete', $dish);
 
         $dish->delete();
 

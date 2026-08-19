@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MenuItem\StoreMenuItemRequest;
+use App\Http\Requests\MenuItem\UpdateMenuItemRequest;
 use App\Models\Menu;
 use App\Models\MenuItem;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class MenuItemController extends Controller
 {
@@ -16,23 +16,11 @@ class MenuItemController extends Controller
      *
      * POST /api/v1/menus/{menu}/items
      */
-    public function store(Request $request, Menu $menu): JsonResponse
+    public function store(StoreMenuItemRequest $request, Menu $menu): JsonResponse
     {
-        $user = $request->user();
-        abort_unless($menu->tenant_id === $user->tenant_id, 404);
-        abort_unless($user->isTenantAdmin(), 403, 'Solo el administrador del catering puede modificar las opciones del menú.');
+        $this->authorize('create', MenuItem::class);
 
-        $data = $request->validate([
-            'dish_id' => [
-                'required',
-                Rule::exists('dishes', 'id')->where('tenant_id', $user->tenant_id)->whereNull('deleted_at'),
-            ],
-            'option_label' => ['required', 'string', 'max:30'],
-            'max_quota' => ['nullable', 'integer', 'min:1'],
-            'price_extra_clp' => ['nullable', 'integer', 'min:0'],
-            'is_available' => ['boolean'],
-            'sort_order' => ['nullable', 'integer', 'min:0'],
-        ]);
+        $data = $request->validated();
 
         $item = $menu->items()->create([
             ...$data,
@@ -47,23 +35,12 @@ class MenuItemController extends Controller
      *
      * PUT/PATCH /api/v1/menu-items/{menuItem}
      */
-    public function update(Request $request, MenuItem $menuItem): JsonResponse
+    public function update(UpdateMenuItemRequest $request, MenuItem $menuItem): JsonResponse
     {
-        $user = $request->user();
-        abort_unless($menuItem->menu->tenant_id === $user->tenant_id, 404);
-        abort_unless($user->isTenantAdmin(), 403, 'Solo el administrador del catering puede modificar las opciones del menú.');
+        abort_unless($menuItem->menu !== null, 404);
+        $this->authorize('update', $menuItem);
 
-        $data = $request->validate([
-            'dish_id' => [
-                'sometimes',
-                Rule::exists('dishes', 'id')->where('tenant_id', $user->tenant_id)->whereNull('deleted_at'),
-            ],
-            'option_label' => ['sometimes', 'string', 'max:30'],
-            'max_quota' => ['nullable', 'integer', 'min:1'],
-            'price_extra_clp' => ['nullable', 'integer', 'min:0'],
-            'is_available' => ['boolean'],
-            'sort_order' => ['nullable', 'integer', 'min:0'],
-        ]);
+        $data = $request->validated();
 
         // No permitir bajar el cupo por debajo de los pedidos ya confirmados
         if (array_key_exists('max_quota', $data) && $data['max_quota'] !== null) {
@@ -85,11 +62,10 @@ class MenuItemController extends Controller
      *
      * DELETE /api/v1/menu-items/{menuItem}
      */
-    public function destroy(Request $request, MenuItem $menuItem): JsonResponse
+    public function destroy(MenuItem $menuItem): JsonResponse
     {
-        $user = $request->user();
-        abort_unless($menuItem->menu->tenant_id === $user->tenant_id, 404);
-        abort_unless($user->isTenantAdmin(), 403, 'Solo el administrador del catering puede modificar las opciones del menú.');
+        abort_unless($menuItem->menu !== null, 404);
+        $this->authorize('delete', $menuItem);
 
         if ($menuItem->getConfirmedOrdersCount() > 0) {
             return response()->json([

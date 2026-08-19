@@ -177,4 +177,53 @@ class User extends Authenticatable
         // Elimina espacios, guiones y caracteres no numéricos excepto el '+'
         return preg_replace('/[^\d+]/', '', $this->phone);
     }
+
+    /* =========================================================================
+     * MÉTODOS Y ACCESSORS DE IDENTIFICACIÓN / RUT
+     * ========================================================================= */
+
+    /**
+     * Retorna el RUT del usuario con formato estándar visual (ej: 12.345.678-K).
+     */
+    public function getFormattedRutAttribute(): ?string
+    {
+        if (!$this->rut) {
+            return null;
+        }
+
+        /** @var \App\Services\Identification\IdentificationManager $manager */
+        $manager = app(\App\Services\Identification\IdentificationManager::class);
+
+        return $manager->format($this->rut, 'CL');
+    }
+
+    /**
+     * Retorna el RUT limpio y estandarizado (ej: 12345678-K).
+     */
+    public function getCleanRutAttribute(): ?string
+    {
+        if (!$this->rut) {
+            return null;
+        }
+
+        /** @var \App\Services\Identification\IdentificationManager $manager */
+        $manager = app(\App\Services\Identification\IdentificationManager::class);
+
+        return $manager->clean($this->rut, 'CL');
+    }
+
+    /**
+     * Determina si el RUT guardado para el usuario es formalmente válido.
+     */
+    public function hasValidRut(?string $country = 'CL'): bool
+    {
+        if (!$this->rut) {
+            return false;
+        }
+
+        /** @var \App\Services\Identification\IdentificationManager $manager */
+        $manager = app(\App\Services\Identification\IdentificationManager::class);
+
+        return $manager->validate($this->rut, $country);
+    }
 }

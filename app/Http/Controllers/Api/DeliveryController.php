@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Delivery\ScanDeliveryRequest;
 use App\Models\Order;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class DeliveryController extends Controller
 {
@@ -16,21 +16,13 @@ class DeliveryController extends Controller
      *
      * POST /api/v1/delivery/scan  { "qr_code_hash": "..." }
      */
-    public function scan(Request $request): JsonResponse
+    public function scan(ScanDeliveryRequest $request): JsonResponse
     {
-        $user = $request->user();
-        abort_unless(
-            $user->isKitchenOperator() || $user->isTenantAdmin(),
-            403,
-            'Solo el personal del catering puede registrar entregas.'
-        );
+        $this->authorize('deliver', Order::class);
 
-        $data = $request->validate([
-            'qr_code_hash' => ['required', 'string', 'size:64'],
-        ]);
+        $data = $request->validated();
 
         $order = Order::query()
-            ->where('tenant_id', $user->tenant_id)
             ->where('qr_code_hash', $data['qr_code_hash'])
             ->with(['user:id,name', 'menuItem.dish:id,name', 'branch:id,name'])
             ->first();
