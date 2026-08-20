@@ -13,11 +13,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->append(\App\Http\Middleware\SanitizeInput::class);
+
         $middleware->alias([
             'tenant.context' => \App\Http\Middleware\SetTenantContext::class,
         ]);
 
         $middleware->priority([
+            \App\Http\Middleware\SanitizeInput::class,
             \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
             \Illuminate\Cookie\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,

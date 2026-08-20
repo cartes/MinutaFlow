@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests\Order;
 
+use App\Http\Requests\Concerns\SanitizesInput;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CancelOrderRequest extends FormRequest
 {
+    use SanitizesInput;
+
     public function authorize(): bool
     {
         return true;

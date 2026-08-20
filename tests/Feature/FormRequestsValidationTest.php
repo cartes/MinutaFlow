@@ -165,4 +165,57 @@ class FormRequestsValidationTest extends TestCase
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['qr_code_hash']);
     }
+
+    public function test_store_company_request_validates_and_sanitizes(): void
+    {
+        $request = new \App\Http\Requests\Company\StoreCompanyRequest();
+        $request->setContainer(app());
+        $request->merge([
+            'name' => '  Empresa Demo <script>bad()</script>  ',
+            'rut' => '76.123.456-7',
+            'billing_email' => '  Facturacion@Empresa.CL  ',
+        ]);
+
+        $request->sanitizeInputs();
+
+        $this->assertSame('Empresa Demo bad()', $request->input('name'));
+        $this->assertSame('facturacion@empresa.cl', $request->input('billing_email'));
+        $this->assertSame('76.123.456-7', $request->input('rut'));
+    }
+
+    public function test_store_user_request_validates_and_sanitizes(): void
+    {
+        $request = new \App\Http\Requests\User\StoreUserRequest();
+        $request->setContainer(app());
+        $request->merge([
+            'name' => '  Juan Perez <b>bold</b>  ',
+            'email' => '  Juan.Perez@Empresa.CL  ',
+            'rut' => '12.345.678-5',
+            'role' => 'employee',
+            'password' => 'secret1234',
+        ]);
+
+        $request->sanitizeInputs();
+
+        $this->assertSame('Juan Perez bold', $request->input('name'));
+        $this->assertSame('juan.perez@empresa.cl', $request->input('email'));
+        $this->assertSame('12.345.678-5', $request->input('rut'));
+    }
+
+    public function test_store_tenant_request_validates_and_sanitizes(): void
+    {
+        $request = new \App\Http\Requests\Tenant\StoreTenantRequest();
+        $request->setContainer(app());
+        $request->merge([
+            'name' => '  Catering Delicia <h1>tit</h1>  ',
+            'slug' => 'catering-delicia',
+            'rut' => '76.999.888-1',
+            'billing_email' => '  ADMIN@DELICIA.CL  ',
+        ]);
+
+        $request->sanitizeInputs();
+
+        $this->assertSame('Catering Delicia tit', $request->input('name'));
+        $this->assertSame('admin@delicia.cl', $request->input('billing_email'));
+    }
 }

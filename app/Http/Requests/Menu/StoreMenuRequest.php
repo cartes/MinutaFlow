@@ -2,12 +2,15 @@
 
 namespace App\Http\Requests\Menu;
 
+use App\Http\Requests\Concerns\SanitizesInput;
 use App\Services\Tenancy\TenantManager;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class StoreMenuRequest extends FormRequest
 {
+    use SanitizesInput;
+
     public function authorize(): bool
     {
         return true;
@@ -18,7 +21,7 @@ class StoreMenuRequest extends FormRequest
      */
     public function rules(TenantManager $tenantManager): array
     {
-        $tenantId = $tenantManager->getTenantId();
+        $tenantId = $tenantManager->getTenantId() ?? $this->user()?->tenant_id;
 
         return [
             'company_id' => [
@@ -31,7 +34,10 @@ class StoreMenuRequest extends FormRequest
                 'date',
                 Rule::unique('menus', 'menu_date')
                     ->where('tenant_id', $tenantId)
-                    ->where('company_id', $this->input('company_id'))
+                    ->where(fn ($q) => $this->filled('company_id')
+                        ? $q->where('company_id', $this->input('company_id'))
+                        : $q->whereNull('company_id')
+                    )
                     ->whereNull('deleted_at'),
             ],
             'is_published' => ['boolean'],

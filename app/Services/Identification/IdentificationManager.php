@@ -6,6 +6,9 @@ use App\Enums\IdentificationType;
 use App\Services\Identification\Contracts\IdentificationValidatorInterface;
 use App\Services\Identification\Drivers\ArgentineDniValidator;
 use App\Services\Identification\Drivers\ChileanRutValidator;
+use App\Services\Identification\Drivers\ColombianNitValidator;
+use App\Services\Identification\Drivers\GenericTaxIdValidator;
+use App\Services\Identification\Drivers\PeruvianDniValidator;
 use InvalidArgumentException;
 
 class IdentificationManager
@@ -118,5 +121,8 @@ class IdentificationManager
     {
         $this->drivers[IdentificationType::ChileanRut->value] = new ChileanRutValidator();
         $this->drivers[IdentificationType::ArgentineDni->value] = new ArgentineDniValidator();
+        $this->drivers[IdentificationType::PeruvianDni->value] = new PeruvianDniValidator();
+        $this->drivers[IdentificationType::ColombianNit->value] = new ColombianNitValidator();
+        $this->drivers[IdentificationType::Generic->value] = new GenericTaxIdValidator();
     }
 }

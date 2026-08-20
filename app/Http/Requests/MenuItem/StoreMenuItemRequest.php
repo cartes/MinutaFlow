@@ -2,12 +2,15 @@
 
 namespace App\Http\Requests\MenuItem;
 
+use App\Http\Requests\Concerns\SanitizesInput;
 use App\Services\Tenancy\TenantManager;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class StoreMenuItemRequest extends FormRequest
 {
+    use SanitizesInput;
+
     public function authorize(): bool
     {
         return true;
@@ -18,7 +21,7 @@ class StoreMenuItemRequest extends FormRequest
      */
     public function rules(TenantManager $tenantManager): array
     {
-        $tenantId = $tenantManager->getTenantId();
+        $tenantId = $tenantManager->getTenantId() ?? $this->user()?->tenant_id;
 
         return [
             'dish_id' => [
