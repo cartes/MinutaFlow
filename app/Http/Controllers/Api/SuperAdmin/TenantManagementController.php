@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\SuperAdmin;
 
+use App\Enums\OrderStatus;
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
@@ -149,6 +150,8 @@ class TenantManagementController extends Controller
             'slug' => ['sometimes', 'nullable', 'string', 'max:100', Rule::unique('tenants', 'slug')->ignore($tenant->id)],
             'billing_email' => ['sometimes', 'required', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50'],
+            'timezone' => ['sometimes', 'string', 'max:64', 'timezone:all'],
+            'currency' => ['sometimes', 'string', 'size:3'],
             'is_active' => ['sometimes', 'boolean'],
         ]);
 
@@ -179,6 +182,118 @@ class TenantManagementController extends Controller
         return response()->json([
             'message' => 'Empresa de catering pausada/desactivada correctamente.',
             'data' => $tenant,
+        ]);
+    }
+
+    /**
+     * Empresas clientes contratantes de la concesionaria, con métricas por contrato.
+     */
+    public function companies(Tenant $tenant): JsonResponse
+    {
+        $companies = $tenant->companies()
+            ->withCount(['branches', 'users', 'orders'])
+            ->orderBy('name')
+            ->get();
+
+        return response()->json([
+            'data' => $companies,
+        ]);
+    }
+
+    /**
+     * Sucursales / puntos de entrega operados por la concesionaria.
+     */
+    public function branches(Tenant $tenant): JsonResponse
+    {
+        $branches = $tenant->branches()
+            ->with('company:id,name')
+            ->withCount(['users', 'orders'])
+            ->orderBy('name')
+            ->get();
+
+        return response()->json([
+            'data' => $branches,
+        ]);
+    }
+
+    /**
+     * Usuarios de la concesionaria (admins, cocina, RRHH y comensales).
+     */
+    public function users(Request $request, Tenant $tenant): JsonResponse
+    {
+        $query = $tenant->users()
+            ->with(['company:id,name', 'branch:id,name'])
+            ->select(['id', 'tenant_id', 'company_id', 'branch_id', 'name', 'email', 'rut', 'phone', 'role', 'is_active', 'created_at']);
+
+        if ($role = $request->input('role')) {
+            $query->where('role', $role);
+        }
+
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('rut', 'like', "%{$search}%");
+            });
+        }
+
+        $users = $query->orderBy('name')->get();
+
+        return response()->json([
+            'data' => $users,
+        ]);
+    }
+
+    /**
+     * Reporte operativo individual de la concesionaria.
+     */
+    public function reports(Tenant $tenant): JsonResponse
+    {
+        $ordersByStatus = $tenant->orders()
+            ->selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        $dailyOrders = $tenant->orders()
+            ->where('order_date', '>=', now()->subDays(29)->toDateString())
+            ->selectRaw('order_date, COUNT(*) as total')
+            ->groupBy('order_date')
+            ->orderBy('order_date')
+            ->get()
+            ->map(fn ($row) => [
+                'date' => $row->order_date->format('Y-m-d'),
+                'total' => (int) $row->total,
+            ])
+            ->values();
+
+        $topCompanies = $tenant->companies()
+            ->withCount('orders')
+            ->orderByDesc('orders_count')
+            ->limit(5)
+            ->get(['id', 'name']);
+
+        $usersByRole = $tenant->users()
+            ->selectRaw('role, COUNT(*) as total')
+            ->groupBy('role')
+            ->pluck('total', 'role');
+
+        $copayTotal = (int) $tenant->orders()
+            ->whereIn('status', [OrderStatus::Confirmed->value, OrderStatus::Delivered->value])
+            ->sum('copay_amount_clp');
+
+        return response()->json([
+            'data' => [
+                'orders_by_status' => $ordersByStatus,
+                'daily_orders' => $dailyOrders,
+                'top_companies' => $topCompanies,
+                'users_by_role' => $usersByRole,
+                'copay_total_clp' => $copayTotal,
+                'catalog' => [
+                    'dishes' => $tenant->dishes()->count(),
+                    'menus' => $tenant->menus()->count(),
+                    'published_menus' => $tenant->menus()->where('is_published', true)->count(),
+                ],
+            ],
         ]);
     }
 

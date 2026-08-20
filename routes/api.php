@@ -48,6 +48,13 @@ Route::prefix('v1')->group(function () {
      * ---------------------------------------------------------------------- */
     Route::middleware(['auth:sanctum', 'super_admin'])->prefix('superadmin')->group(function () {
         Route::get('metrics', [\App\Http\Controllers\Api\SuperAdmin\TenantManagementController::class, 'metrics']);
+
+        // Sub-recursos de detalle por concesionaria (drill-down del Super Admin)
+        Route::get('tenants/{tenant}/companies', [\App\Http\Controllers\Api\SuperAdmin\TenantManagementController::class, 'companies']);
+        Route::get('tenants/{tenant}/branches', [\App\Http\Controllers\Api\SuperAdmin\TenantManagementController::class, 'branches']);
+        Route::get('tenants/{tenant}/users', [\App\Http\Controllers\Api\SuperAdmin\TenantManagementController::class, 'users']);
+        Route::get('tenants/{tenant}/reports', [\App\Http\Controllers\Api\SuperAdmin\TenantManagementController::class, 'reports']);
+
         Route::apiResource('tenants', \App\Http\Controllers\Api\SuperAdmin\TenantManagementController::class);
     });
 });

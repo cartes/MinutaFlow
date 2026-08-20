@@ -1,13 +1,39 @@
 <script setup>
 import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
+import { useSuperadminTenantStore } from '../stores/superadminTenant';
 import BrandMark from '../components/BrandMark.vue';
 
 const auth = useAuthStore();
+const route = useRoute();
 const router = useRouter();
+const tenantStore = useSuperadminTenantStore();
 
 const isMobileSidebarOpen = ref(false);
+
+// Sub-menú contextual: aparece al entrar al detalle de una concesionaria
+const activeTenantId = computed(() => route.params.tenantId ?? null);
+const inTenantDetail = computed(() => !!activeTenantId.value);
+
+const tenantSubItems = [
+    { label: 'Resumen General', name: 'superadmin-tenant-overview', icon: 'eye' },
+    { label: 'Ficha & Edición', name: 'superadmin-tenant-edit', icon: 'pencil' },
+    { label: 'Empresas Clientes', name: 'superadmin-tenant-companies', icon: 'briefcase' },
+    { label: 'Sucursales & Casinos', name: 'superadmin-tenant-branches', icon: 'map' },
+    { label: 'Usuarios & Accesos', name: 'superadmin-tenant-users', icon: 'users' },
+    { label: 'Reportes', name: 'superadmin-tenant-reports', icon: 'report' },
+];
+
+const tenantInitials = computed(() => {
+    const name = tenantStore.tenantName || '';
+    return name
+        .split(' ')
+        .slice(0, 2)
+        .map((word) => word[0] ?? '')
+        .join('')
+        .toUpperCase() || '···';
+});
 
 const navigationSections = [
     {
@@ -103,7 +129,8 @@ async function logout() {
 
                 <!-- Navegación de Super Admin -->
                 <nav class="space-y-5">
-                    <div v-for="section in navigationSections" :key="section.title" class="space-y-1.5">
+                    <template v-for="(section, sectionIndex) in navigationSections" :key="section.title">
+                    <div class="space-y-1.5">
                         <div class="px-3 text-[10.5px] font-bold tracking-wider text-[#736e64] uppercase">
                             {{ section.title }}
                         </div>
@@ -141,6 +168,76 @@ async function logout() {
                             </router-link>
                         </div>
                     </div>
+
+                    <!-- Sub-menú contextual de la concesionaria en inspección -->
+                    <div v-if="sectionIndex === 0 && inTenantDetail" class="space-y-1.5">
+                        <div class="px-3 flex items-center justify-between">
+                            <span class="text-[10.5px] font-bold tracking-wider text-emerald-500/80 uppercase">Concesionaria</span>
+                            <router-link
+                                :to="{ name: 'superadmin-tenants' }"
+                                class="inline-flex items-center gap-1 text-[10.5px] font-semibold text-[#8a857a] hover:text-white transition-colors"
+                                @click="isMobileSidebarOpen = false"
+                            >
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                </svg>
+                                Volver
+                            </router-link>
+                        </div>
+
+                        <div class="rounded-2xl bg-white/5 border border-white/10 p-2 space-y-1">
+                            <!-- Cabecera con identidad del tenant -->
+                            <div class="flex items-center gap-2.5 px-2.5 py-2 border-b border-white/10 mb-1">
+                                <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-tr from-emerald-600/70 to-teal-500/70 text-[11px] font-bold text-white">
+                                    {{ tenantInitials }}
+                                </div>
+                                <div class="min-w-0 leading-tight">
+                                    <div class="text-xs font-semibold text-white truncate">
+                                        {{ tenantStore.tenantName || 'Cargando…' }}
+                                    </div>
+                                    <div class="flex items-center gap-1 text-[10px]" :class="tenantStore.tenant?.is_active ? 'text-emerald-400' : 'text-amber-400'">
+                                        <span class="h-1 w-1 rounded-full" :class="tenantStore.tenant?.is_active ? 'bg-emerald-400' : 'bg-amber-400'"></span>
+                                        {{ tenantStore.tenant?.is_active ? 'Operativa' : 'Pausada' }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sub-items de navegación del tenant -->
+                            <router-link
+                                v-for="item in tenantSubItems"
+                                :key="item.name"
+                                :to="{ name: item.name, params: { tenantId: activeTenantId } }"
+                                class="flex items-center gap-2.5 rounded-xl px-3 py-2 text-[13px] font-medium transition-all"
+                                :class="route.name === item.name
+                                    ? 'bg-white/15 text-white font-semibold border border-white/10'
+                                    : 'text-[#b8b3a7] hover:bg-white/10 hover:text-white'"
+                                @click="isMobileSidebarOpen = false"
+                            >
+                                <svg v-if="item.icon === 'eye'" class="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                <svg v-else-if="item.icon === 'pencil'" class="w-3.5 h-3.5 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                                <svg v-else-if="item.icon === 'briefcase'" class="w-3.5 h-3.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                                <svg v-else-if="item.icon === 'map'" class="w-3.5 h-3.5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <svg v-else-if="item.icon === 'users'" class="w-3.5 h-3.5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                                <svg v-else class="w-3.5 h-3.5 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                <span>{{ item.label }}</span>
+                            </router-link>
+                        </div>
+                    </div>
+                    </template>
                 </nav>
             </div>
 

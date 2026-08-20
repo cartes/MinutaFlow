@@ -46,6 +46,44 @@ const routes = [
                 name: 'superadmin-tenants',
                 component: () => import('../pages/superadmin/TenantsAdminPage.vue'),
             },
+            // Detalle / drill-down de una concesionaria específica
+            {
+                path: 'admin/tenants/:tenantId',
+                component: () => import('../pages/superadmin/tenant/TenantDetailShell.vue'),
+                props: true,
+                children: [
+                    {
+                        path: '',
+                        name: 'superadmin-tenant-overview',
+                        component: () => import('../pages/superadmin/tenant/TenantOverviewPage.vue'),
+                    },
+                    {
+                        path: 'empresas',
+                        name: 'superadmin-tenant-companies',
+                        component: () => import('../pages/superadmin/tenant/TenantCompaniesPage.vue'),
+                    },
+                    {
+                        path: 'sucursales',
+                        name: 'superadmin-tenant-branches',
+                        component: () => import('../pages/superadmin/tenant/TenantBranchesPage.vue'),
+                    },
+                    {
+                        path: 'usuarios',
+                        name: 'superadmin-tenant-users',
+                        component: () => import('../pages/superadmin/tenant/TenantUsersPage.vue'),
+                    },
+                    {
+                        path: 'reportes',
+                        name: 'superadmin-tenant-reports',
+                        component: () => import('../pages/superadmin/tenant/TenantReportsPage.vue'),
+                    },
+                    {
+                        path: 'editar',
+                        name: 'superadmin-tenant-edit',
+                        component: () => import('../pages/superadmin/tenant/TenantEditPage.vue'),
+                    },
+                ],
+            },
         ],
     },
     { path: '/:pathMatch(.*)*', redirect: '/' },

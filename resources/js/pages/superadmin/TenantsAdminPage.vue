@@ -1,6 +1,9 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { api } from '../../api';
+
+const router = useRouter();
 
 const tenants = ref([]);
 const metrics = ref({
@@ -38,10 +41,8 @@ async function loadData() {
     try {
         const [tenantsRes, metricsRes] = await Promise.all([
             api.get('/superadmin/tenants', {
-                params: {
-                    search: search.value || undefined,
-                    is_active: statusFilter.value !== '' ? statusFilter.value : undefined,
-                },
+                search: search.value || undefined,
+                is_active: statusFilter.value !== '' ? statusFilter.value : undefined,
             }),
             api.get('/superadmin/metrics'),
         ]);
@@ -137,6 +138,10 @@ async function toggleTenantStatus(tenant) {
     } catch (e) {
         alert(e.message || 'No se pudo actualizar el estado.');
     }
+}
+
+function goToTenantDetail(tenant) {
+    router.push({ name: 'superadmin-tenant-overview', params: { tenantId: tenant.id } });
 }
 
 onMounted(() => {
@@ -314,7 +319,9 @@ onMounted(() => {
                         <tr
                             v-for="tenant in filteredTenants"
                             :key="tenant.id"
-                            class="hover:bg-paper/40 transition-colors"
+                            class="hover:bg-paper/40 transition-colors cursor-pointer"
+                            title="Ver detalle de la concesionaria"
+                            @click="goToTenantDetail(tenant)"
                         >
                             <!-- Nombre & Contacto -->
                             <td class="px-6 py-4">
@@ -388,14 +395,23 @@ onMounted(() => {
 
                             <!-- Acciones -->
                             <td class="px-6 py-4 text-right">
-                                <button
-                                    type="button"
-                                    class="rounded-lg px-2.5 py-1 text-xs font-medium border border-btn-line bg-white hover:bg-paper transition-colors cursor-pointer"
-                                    :class="tenant.is_active ? 'text-amber-700 hover:border-amber-300' : 'text-emerald-700 hover:border-emerald-300'"
-                                    @click="toggleTenantStatus(tenant)"
-                                >
-                                    {{ tenant.is_active ? 'Pausar' : 'Activar' }}
-                                </button>
+                                <div class="inline-flex items-center gap-2">
+                                    <button
+                                        type="button"
+                                        class="rounded-lg px-2.5 py-1 text-xs font-medium border border-btn-line bg-white text-ink hover:bg-paper hover:border-ink/40 transition-colors cursor-pointer"
+                                        @click.stop="goToTenantDetail(tenant)"
+                                    >
+                                        Ver Detalles
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="rounded-lg px-2.5 py-1 text-xs font-medium border border-btn-line bg-white hover:bg-paper transition-colors cursor-pointer"
+                                        :class="tenant.is_active ? 'text-amber-700 hover:border-amber-300' : 'text-emerald-700 hover:border-emerald-300'"
+                                        @click.stop="toggleTenantStatus(tenant)"
+                                    >
+                                        {{ tenant.is_active ? 'Pausar' : 'Activar' }}
+                                    </button>
+                                </div>
                             </td>
                         </tr>
 
