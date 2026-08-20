@@ -1,8 +1,10 @@
 <script setup>
 import { ref } from 'vue';
 import BrandMark from '../components/BrandMark.vue';
+import { useLoginModal } from '../composables/useLoginModal';
 
 const isMobileMenuOpen = ref(false);
+const { openLoginModal } = useLoginModal();
 
 const navLinks = [
     { label: 'Producto', href: '#producto' },
@@ -41,12 +43,13 @@ const navLinks = [
 
                 <!-- Acciones escritorio -->
                 <div class="hidden md:flex items-center gap-3">
-                    <router-link
-                        :to="{ name: 'login' }"
-                        class="rounded-[10px] border border-btn-line bg-white/60 px-4 py-[9px] text-sm font-medium text-ink hover:bg-white hover:border-line transition-all shadow-xs"
+                    <button
+                        type="button"
+                        class="rounded-[10px] border border-btn-line bg-white/60 px-4 py-[9px] text-sm font-medium text-ink hover:bg-white hover:border-line hover:shadow-xs transition-all cursor-pointer"
+                        @click="openLoginModal()"
                     >
                         Ingresar
-                    </router-link>
+                    </button>
                     <a
                         href="mailto:hola@minutaflow.cl?subject=Demo%20MinutaFlow"
                         class="rounded-[10px] border border-green bg-green px-4 py-[9px] text-sm font-medium text-white hover:bg-green-hover transition-colors shadow-xs"
@@ -88,13 +91,13 @@ const navLinks = [
                     </a>
                 </nav>
                 <div class="pt-3 border-t border-line/60 flex flex-col gap-2.5">
-                    <router-link
-                        :to="{ name: 'login' }"
-                        class="w-full text-center rounded-[10px] border border-btn-line bg-white py-2.5 text-sm font-medium text-ink hover:bg-paper"
-                        @click="isMobileMenuOpen = false"
+                    <button
+                        type="button"
+                        class="w-full text-center rounded-[10px] border border-btn-line bg-white py-2.5 text-sm font-medium text-ink hover:bg-paper cursor-pointer"
+                        @click="isMobileMenuOpen = false; openLoginModal();"
                     >
                         Ingresar a la plataforma
-                    </router-link>
+                    </button>
                     <a
                         href="mailto:hola@minutaflow.cl?subject=Demo%20MinutaFlow"
                         class="w-full text-center rounded-[10px] bg-green py-2.5 text-sm font-medium text-white hover:bg-green-hover"
@@ -144,7 +147,7 @@ const navLinks = [
                             <li><a href="#producto" class="hover:text-green transition-colors">Planificador de Menús</a></li>
                             <li><a href="#producto" class="hover:text-green transition-colors">Gestión de Alérgenos</a></li>
                             <li><a href="#precios" class="hover:text-green transition-colors">Planes y Precios</a></li>
-                            <li><router-link :to="{ name: 'login' }" class="hover:text-green transition-colors">Portal de Acceso</router-link></li>
+                            <li><button type="button" @click="openLoginModal()" class="hover:text-green transition-colors cursor-pointer text-left">Portal de Acceso</button></li>
                         </ul>
                     </div>
 

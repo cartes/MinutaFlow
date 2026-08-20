@@ -1,6 +1,9 @@
 <script setup>
 import PublicLayout from '../layouts/PublicLayout.vue';
 import ProgressBar from '../components/ProgressBar.vue';
+import { useLoginModal } from '../composables/useLoginModal';
+
+const { openLoginModal } = useLoginModal();
 
 const stats = [
     { value: '98,4%', label: 'de pedidos retirados' },
@@ -56,10 +59,11 @@ const demanda = [
                             href="mailto:hola@minutaflow.cl?subject=Demo%20MinutaFlow"
                             class="rounded-xl border border-ink bg-ink px-6 py-[13px] text-[15px] text-white hover:bg-ink-hover"
                         >Agendar una demo</a>
-                        <router-link
-                            :to="{ name: 'login' }"
-                            class="rounded-xl border border-btn-line bg-white px-[22px] py-[13px] text-[15px] hover:bg-paper"
-                        >Ver el panel de cocina</router-link>
+                        <button
+                            type="button"
+                            class="rounded-xl border border-btn-line bg-white px-[22px] py-[13px] text-[15px] text-ink hover:bg-paper cursor-pointer transition-colors shadow-2xs"
+                            @click="openLoginModal()"
+                        >Ver el panel de cocina</button>
                     </div>
                 </div>
 
