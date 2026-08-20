@@ -1,9 +1,45 @@
 @import 'tailwindcss';
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
+@source '../js/**/*.vue';
+@source '../js/**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-serif: 'Instrument Serif', Georgia, serif;
+
+    /* Paleta MinutaFlow (diseño crema/verde) */
+    --color-cream: #efebe3;      /* fondo general */
+    --color-paper: #f7f4ec;      /* superficies sutiles / hover */
+    --color-ink: #1b1a17;        /* texto principal / botón oscuro */
+    --color-ink-hover: #333029;
+    --color-muted: #56534b;      /* texto secundario */
+    --color-faint: #8a857a;      /* texto terciario / labels */
+    --color-line: #e0dace;       /* bordes fuertes */
+    --color-card-line: #e4ded2;  /* borde de tarjetas */
+    --color-btn-line: #dcd5c7;   /* borde de botones */
+    --color-row-line: #f1ede4;   /* separadores de filas */
+    --color-dash-line: #d6cfc0;  /* borde punteado */
+
+    --color-green: #3f6b4a;      /* verde marca */
+    --color-green-hover: #345a3e;
+    --color-green-deep: #2c4e35;
+    --color-green-soft: #e7ede5; /* chips / badges verdes */
+    --color-green-mid: #6e9e6a;  /* acentos positivos */
+
+    --color-sand: #f0e2b6;       /* sidebar / banner */
+    --color-sand-deep: #e1d0a0;  /* avatar sobre sand */
+    --color-sand-muted: #96896a; /* labels sobre sand */
+    --color-sand-text: #5b5340;  /* texto sobre sand */
+    --color-sand-soft: #7c7159;  /* texto secundario sobre sand */
+
+    --color-gold: #e3c766;       /* barra demanda 1 */
+    --color-tan: #c9b98f;        /* barra demanda 2 */
+    --color-rust: #c97f5a;       /* alertas / agotado */
+}
+
+body {
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
 }
