@@ -1,6 +1,6 @@
 <script setup>
 import PublicLayout from '../layouts/PublicLayout.vue';
-import ProgressBar from '../components/ProgressBar.vue';
+import DemandLiveCard from '../components/DemandLiveCard.vue';
 import { useLoginModal } from '../composables/useLoginModal';
 
 const { openLoginModal } = useLoginModal();
@@ -28,12 +28,6 @@ const roles = [
         title: 'Subsidio y copago',
         body: 'El porcentaje de subsidio se aplica al pedido y el copago en CLP queda registrado para la liquidación del mes.',
     },
-];
-
-const demanda = [
-    { label: 'Fondo del día', value: 184, pct: 82, color: 'bg-gold' },
-    { label: 'Hipocalórico', value: 92, pct: 41, color: 'bg-tan' },
-    { label: 'Vegana', value: 37, pct: 17, color: 'bg-green-mid' },
 ];
 </script>
 
@@ -67,25 +61,8 @@ const demanda = [
                     </div>
                 </div>
 
-                <div class="rounded-[22px] border border-card-line bg-white px-8 pt-[30px] pb-[34px] shadow-[0_24px_60px_-40px_rgba(60,50,30,0.45)]">
-                    <div class="mb-[26px] flex items-baseline justify-between">
-                        <span class="text-[13px] tracking-wider text-faint uppercase">Servicio de hoy</span>
-                        <span class="text-[13px] text-faint">Planta Quilicura</span>
-                    </div>
-                    <div class="grid gap-[22px]">
-                        <div v-for="row in demanda" :key="row.label">
-                            <div class="mb-2 flex items-baseline justify-between">
-                                <span class="text-sm text-muted">{{ row.label }}</span>
-                                <span class="text-[22px] tracking-tight tabular-nums">{{ row.value }}</span>
-                            </div>
-                            <ProgressBar :value="row.pct" :color="row.color" height="h-[5px]" />
-                        </div>
-                    </div>
-                    <div class="mt-7 flex items-center justify-between border-t border-cream pt-5">
-                        <span class="text-[13.5px] text-faint">Corte de pedidos</span>
-                        <span class="rounded-full bg-green-soft px-[11px] py-[5px] text-[13.5px] text-green">Cierra en 2 h 14 min</span>
-                    </div>
-                </div>
+                <!-- Gráfico de Demanda Interactivo con animación JS en carga -->
+                <DemandLiveCard />
             </section>
 
             <section
