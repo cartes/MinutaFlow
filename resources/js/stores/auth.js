@@ -9,8 +9,9 @@ export const useAuthStore = defineStore('auth', {
 
     getters: {
         isAuthenticated: (state) => !!state.token,
+        isSuperAdmin: (state) => state.user?.role === 'super_admin',
         isCateringStaff: (state) =>
-            ['tenant_admin', 'kitchen_operator', 'super_admin'].includes(state.user?.role),
+            ['tenant_admin', 'kitchen_operator'].includes(state.user?.role),
         initials: (state) => {
             const name = state.user?.tenant?.name ?? state.user?.name ?? '';
             return name

@@ -17,7 +17,14 @@ const routes = [
         component: () => import('../layouts/AppLayout.vue'),
         meta: { requiresAuth: true },
         children: [
-            { path: '', redirect: { name: 'panel' } },
+            {
+                path: '',
+                redirect: (to) => {
+                    const auth = useAuthStore();
+                    return auth.isSuperAdmin ? { name: 'superadmin-tenants' } : { name: 'panel' };
+                },
+            },
+            // Rutas Operativas de Cocina / Tenant
             {
                 path: 'panel',
                 name: 'panel',
@@ -32,6 +39,12 @@ const routes = [
                 path: 'platos',
                 name: 'platos',
                 component: () => import('../pages/DishesPage.vue'),
+            },
+            // Rutas Super Admin (Gestión de Plataforma SaaS)
+            {
+                path: 'admin/tenants',
+                name: 'superadmin-tenants',
+                component: () => import('../pages/superadmin/TenantsAdminPage.vue'),
             },
         ],
     },
@@ -49,7 +62,13 @@ router.beforeEach((to) => {
         return { name: 'login', query: { redirect: to.fullPath } };
     }
     if (to.name === 'login' && auth.isAuthenticated) {
+        if (auth.isSuperAdmin) {
+            return { name: 'superadmin-tenants' };
+        }
         return { name: 'panel' };
+    }
+    if (auth.isAuthenticated && auth.isSuperAdmin && to.name === 'panel') {
+        return { name: 'superadmin-tenants' };
     }
 });
 

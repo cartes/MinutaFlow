@@ -42,4 +42,13 @@ Route::prefix('v1')->group(function () {
         // Entrega / escaneo de QR en recepción
         Route::post('delivery/scan', [DeliveryController::class, 'scan']);
     });
+
+    /* -------------------------------------------------------------------------
+     * Rutas de Super Administrador (Gestión de Plataforma y Negocios)
+     * ---------------------------------------------------------------------- */
+    Route::middleware(['auth:sanctum', 'super_admin'])->prefix('superadmin')->group(function () {
+        Route::get('metrics', [\App\Http\Controllers\Api\SuperAdmin\TenantManagementController::class, 'metrics']);
+        Route::apiResource('tenants', \App\Http\Controllers\Api\SuperAdmin\TenantManagementController::class);
+    });
 });
+

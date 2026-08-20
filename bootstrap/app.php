@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'tenant.context' => \App\Http\Middleware\SetTenantContext::class,
+            'super_admin' => \App\Http\Middleware\EnsureSuperAdmin::class,
         ]);
 
         $middleware->priority([

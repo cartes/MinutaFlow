@@ -60,7 +60,8 @@ async function submit() {
         // Breve pausa para mostrar animación de éxito antes de redirigir
         setTimeout(() => {
             closeLoginModal();
-            const target = redirectTarget.value ?? { name: 'panel' };
+            const defaultRoute = auth.isSuperAdmin ? { name: 'superadmin-tenants' } : { name: 'panel' };
+            const target = redirectTarget.value ?? defaultRoute;
             router.push(target);
             // Reset fields
             email.value = '';
